@@ -14,3 +14,4 @@ output "internal_ip_address_lamp_server" {
 output "external_ip_address_lamp_server" {
   value = module.lamp_instance_preemptible.external_ip_address
 }
+

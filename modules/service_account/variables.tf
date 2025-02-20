@@ -5,11 +5,6 @@ variable "zone" {                                # Используем пере
   default     = "ru-central1-a"
 }
 
-variable "folder_id" {
-  description = "ID каталога в Yandex Cloud"
-  type        = string
-}
-
 variable "sa_name" {
   description = "Имя сервисной учётки"
   type        = string
@@ -25,14 +20,17 @@ variable "static_key_description" {
   type        = string
 }
 
+variable "folder_id" {
+  description = "ID каталога в Yandex Cloud"
+  type        = string
+}
+
 variable "cloud_id" {
   type = string
-  default     = ""
 }
 
 variable "token" {
   type = string
-  default     = ""
 }
 
 variable "service_account_key_file" {

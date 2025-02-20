@@ -1,7 +1,7 @@
 
-variable "zone" {
-  description = "Use specific availability zone"
-  type        = string
+variable "zone" {                                # Используем переменную для передачи в конфиг инфраструктуры
+  description = "Use specific availability zone" # Опционально описание переменной
+  type        = string                           # Опционально тип переменной
   default     = "ru-central1-a"
 }
 
@@ -9,6 +9,46 @@ variable "folder_id" {
   description = "ID каталога в Yandex Cloud"
   type        = string
   default     = ""
+}
+
+variable "cloud_id" {
+  type    = string
+  default = ""
+}
+
+variable "token" {
+  type    = string
+  default = ""
+}
+
+variable "bucket" {
+  description = "Name of the bucket for storing Terraform state"
+  default     = "terraform-state-bucket"
+  type        = string
+}
+
+variable "service_account_key_file" {
+  description = "Path to the service account key file for Yandex Cloud"
+  type        = string
+  default     = ""
+}
+
+variable "storage_access_key" {
+  description = "Access key for Yandex Object Storage"
+  type        = string
+  default     = ""
+}
+
+variable "storage_secret_key" {
+  description = "Secret key for Yandex Object Storage"
+  type        = string
+  default     = ""
+}
+
+variable "preemptible" {
+  description = "Прерываемый инстанс"
+  type        = bool
+  default     = true
 }
 
 variable "user-data" {
@@ -39,19 +79,37 @@ variable "user-data" {
       EOF
 }
 
-
-variable "cloud_id" {
-  type = string
-  default     = ""
-}
-
-variable "token" {
-  type = string
-  default     = ""
-}
-
-variable "bucket" {
-  description = "Name of the bucket for storing Terraform state"
-  default     = "terraform-state-bucket"
+variable "subnet_name" {
+  description = "Имя подсети"
   type        = string
+  default     = "subnet_name"
+}
+
+variable "v4_cidr_blocks" {
+  description = "CIDR блоки для подсети"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "network_id" {
+  description = "ID of the VPC network"
+  type        = string
+}
+
+variable "sa_name" {
+  description = "Имя сервисной учётки"
+  type        = string
+  default     = ""
+}
+
+variable "role" {
+  description = "Роль для назначения сервисной учётке"
+  type        = string
+  default     = ""
+}
+
+variable "static_key_description" {
+  description = "Описание для статического ключа доступа"
+  type        = string
+  default     = ""
 }

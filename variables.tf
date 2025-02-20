@@ -91,10 +91,7 @@ variable "v4_cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
-variable "network_id" {
-  description = "ID of the VPC network"
-  type        = string
-}
+
 
 variable "sa_name" {
   description = "Имя сервисной учётки"

@@ -1,27 +1,14 @@
 
-variable "zone" {                                # Используем переменную для передачи в конфиг инфраструктуры
-  description = "Use specific availability zone" # Опционально описание переменной
-  type        = string                           # Опционально тип переменной
-  default     = "ru-central1-a"                  # Опционально значение по умолчанию для переменной
+variable "zone" {
+  description = "Use specific availability zone"
+  type        = string
+  default     = "ru-central1-a"
 }
 
-variable "size" {
-  description = "Size of the boot disk in GB"
+variable "folder_id" {
+  description = "ID каталога в Yandex Cloud"
   type        = string
-  default     = "10"
-}
-
-variable "type" {
-  description = <<-EOT
-    Type of the boot disk.
-    Network SSD (network-ssd): Fast network drive; SSD network block storage.
-    Network HDD (network-hdd): Standard network drive; HDD network block storage.
-    Non-replicated SSD (network-ssd-nonreplicated): Enhanced performance network drive without redundancy.
-    Ultra high-speed network storage with three replicas (SSD) (network-ssd-io-m3): High-performance SSD offering the same speed as network-ssd-nonreplicated, plus redundancy.
-    Local disk drives on dedicated hosts.
-  EOT
-  type        = string
-  default     = "network-ssd"
+  default     = ""
 }
 
 variable "user-data" {
@@ -52,34 +39,19 @@ variable "user-data" {
       EOF
 }
 
-variable "folder_id" {
-  type    = string
-}
 
 variable "cloud_id" {
-  type    = string
+  type = string
+  default     = ""
 }
 
 variable "token" {
-  type    = string
-}
-
-variable "service_account_key_file" {
-  description = "Path to the service account key file for Yandex Cloud"
-}
-
-
-
-
-variable "storage_access_key" {
-  description = "Access key for Yandex Object Storage"
-}
-
-variable "storage_secret_key" {
-  description = "Secret key for Yandex Object Storage"
+  type = string
+  default     = ""
 }
 
 variable "bucket" {
   description = "Name of the bucket for storing Terraform state"
   default     = "terraform-state-bucket"
+  type        = string
 }

@@ -1,81 +1,102 @@
 
 
+# Используем модуль для создания сервисной учётки
+module "service_account" {
+  source = "./modules/service_account"
+
+  folder_id              = var.folder_id
+  cloud_id               = var.cloud_id
+  token                  = var.token
+  sa_name                = "sa-shqiptar"
+  role                   = "storage.editor"
+  static_key_description = "static access key for object storage"
+}
 
 
-
-# создаём сервис учётку SA
-resource "yandex_iam_service_account" "sa" {
+module "network_a" {
+  source    = "./modules/network"
   folder_id = var.folder_id
-  name = "sa-shqiptar"
+  cloud_id  = var.cloud_id
+  token     = var.token
+
+  name = "network_a1"
 }
 
-# даём права на запись для этой SA
-resource "yandex_resourcemanager_folder_iam_member" "sa-editor" {
+# Используем модуль для создания первой подсети (ru-central1-a)
+module "subnetwork_a" {
+  source    = "./modules/subnet"
   folder_id = var.folder_id
-  role      = "storage.editor"
-  member    = "serviceAccount:${yandex_iam_service_account.sa.id}"
+  cloud_id  = var.cloud_id
+  token     = var.token
+
+  subnet_name    = "subnetwork_a"
+  zone           = "ru-central1-a"
+  v4_cidr_blocks = ["192.168.10.0/24"]
+  network_id = module.network_a.network_id
 }
 
-# создаём ключи доступа Static Access Keys
-resource "yandex_iam_service_account_static_access_key" "sa-static-key" {
-  service_account_id = yandex_iam_service_account.sa.id
-  description        = "static access key for object storage"
+# Используем модуль для создания второй подсети (ru-central1-b)
+module "subnetwork_b" {
+  source    = "./modules/subnet"
+  folder_id = var.folder_id
+  cloud_id  = var.cloud_id
+  token     = var.token
+
+  subnet_name    = "subnetwork_b"
+  zone           = "ru-central1-b"
+  v4_cidr_blocks = ["192.168.20.0/24"]
+  network_id = module.network_a.network_id
 }
 
-
-resource "yandex_vpc_network" "network_a" { # Создаем VPC
-  name = "network_a"
-}
-
-resource "yandex_vpc_subnet" "subnetwork_a" { # Настраиваем VPC
-  name           = "subnetwork_a"
-  zone           = var.zone
-  network_id     = yandex_vpc_network.network_a.id # Берем output переменную из другого ресурса
-  v4_cidr_blocks = ["192.168.10.0/24"] # Указываем CIDR для подсети
-}
 
 # Получаем информацию об образе
-data "yandex_compute_image" "ubuntu" {
-  #family = "ubuntu-2004-lts" # Используем семейство образов Ubuntu 20.04 LTS
+data "yandex_compute_image" "lemp" {
   family = "lemp"
 }
 
-# Создаем виртуальную машину
-resource "yandex_compute_instance" "lemp_server" {
-  name        = "lemp_server"
-  platform_id = "standard-v2" # Intel Cascade Lake
-  zone        = var.zone
-
-  resources {
-    cores  = 2 # Определяет количество vCPU
-    memory = 2 # Определяет объем RAM в гигабайтах
-    core_fraction = 5 # Определяет гарантированную долю CPU в процентах
-  }
-
-  boot_disk {
-    initialize_params {
-      #image_id = "fd81hgrcv6lsnkremf32" # Ubuntu 20.04 LTS
-      image_id = data.yandex_compute_image.ubuntu.id # Используем ID образа из data
-      size = var.size
-      type = var.type
-    }
-  }
-
-  network_interface {
-    subnet_id = yandex_vpc_subnet.subnetwork_a.id
-    nat       = true             # Включить NAT для доступа в интернет
-  }
-
-  metadata = {
-    #user-data = var.user-data
-    ssh-keys = "ubuntu:${file("~/.ssh/yandex_cloud_20250211.pub")}" # подключение ssh -i "C:\Users\valar\.ssh\yandex_cloud_20250211" ubuntu@158.160.46.63"
-  }
-
-  scheduling_policy {
-    preemptible = true # Делаем виртуальную машину прерываемой
-  }
-
+data "yandex_compute_image" "lamp" {
+  family = "lamp"
 }
+
+module "lemp_instance_preemptible" {
+  source    = "./modules/instance"
+  folder_id = var.folder_id
+  cloud_id  = var.cloud_id
+  token     = var.token
+
+  name          = "lemp_server"
+  platform_id   = "standard-v2" # Intel Cascade Lake
+  zone          = "ru-central1-a"
+  cores         = 2
+  memory        = 2
+  core_fraction = 5
+  image_id      = data.yandex_compute_image.lemp.id # Используем ID образа из data
+  disk_size     = 10
+  disk_type     = "network-ssd"
+  subnet_id     = module.subnetwork_a.subnet_id
+  ssh_key_path  = "~/.ssh/yandex_cloud_20250211.pub"
+}
+
+module "lamp_instance_preemptible" {
+  source    = "./modules/instance"
+  folder_id = var.folder_id
+  cloud_id  = var.cloud_id
+  token     = var.token
+
+  name          = "lamp_server"
+  platform_id   = "standard-v2"
+  zone          = "ru-central1-b"
+  cores         = 2
+  memory        = 2
+  core_fraction = 5
+  image_id      = data.yandex_compute_image.lamp.id
+  disk_size     = 10
+  disk_type     = "network-ssd"
+  subnet_id     = module.subnetwork_b.subnet_id
+  ssh_key_path  = "~/.ssh/yandex_cloud_20250211.pub"
+}
+
+
 
 
 

@@ -4,5 +4,13 @@ repos:
     rev: "v0.19.0"
     hooks:
       - id: terraform-docs-go
-        args: ["markdown", "table", "--output-file", "README.md", "./mymodule/path"]
-
+        args: ["markdown", "table", "--output-file", "README.md", "."]
+  - repo: local
+    hooks:
+      - id: convert-to-utf8
+        name: Convert README.md to UTF-8
+        entry: python convert_to_utf8.py README.md
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [ manual ]

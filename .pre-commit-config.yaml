@@ -14,3 +14,28 @@ repos:
         pass_filenames: false
         always_run: true
         stages: [ manual ]
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: "v1.97.3"
+    hooks:
+      - id: terraform_fmt
+        name: terraform fmt
+        description: runs terraform fmt
+        entry: terraform fmt -recursive
+        language: system
+        pass_filenames: false
+      - id: terraform_validate
+        name: terraform validate
+        description: runs terraform validate
+        entry: terraform validate
+        language: system
+        pass_filenames: false
+      - id: terraform_tflint
+        name: terraform tflint
+        description: runs tflint with specific rules
+        entry: tflint
+        args:
+          - --init
+          - --only=terraform_deprecated_interpolation
+          - --only=terraform_deprecated_index
+        language: system
+        pass_filenames: false

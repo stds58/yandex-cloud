@@ -74,7 +74,7 @@ variable "folder_id" {
 }
 
 variable "cloud_id" {
-  type        = string
+  type = string
 }
 
 variable "token" {

@@ -32,7 +32,7 @@ module "subnetwork_a" {
   subnet_name    = "subnetwork_a"
   zone           = "ru-central1-a"
   v4_cidr_blocks = ["192.168.10.0/24"]
-  network_id = module.network_a.network_id
+  network_id     = module.network_a.network_id
 }
 
 # Используем модуль для создания второй подсети (ru-central1-b)
@@ -45,7 +45,7 @@ module "subnetwork_b" {
   subnet_name    = "subnetwork_b"
   zone           = "ru-central1-b"
   v4_cidr_blocks = ["192.168.20.0/24"]
-  network_id = module.network_a.network_id
+  network_id     = module.network_a.network_id
 }
 
 

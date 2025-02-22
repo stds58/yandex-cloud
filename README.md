@@ -17,6 +17,7 @@
 |------|--------|---------|
 | <a name="module_lamp_instance_preemptible"></a> [lamp\_instance\_preemptible](#module\_lamp\_instance\_preemptible) | ./modules/instance | n/a |
 | <a name="module_lemp_instance_preemptible"></a> [lemp\_instance\_preemptible](#module\_lemp\_instance\_preemptible) | ./modules/instance | n/a |
+| <a name="module_load_balancer"></a> [load\_balancer](#module\_load\_balancer) | ./modules/load_balancer | n/a |
 | <a name="module_network_a"></a> [network\_a](#module\_network\_a) | ./modules/network | n/a |
 | <a name="module_service_account"></a> [service\_account](#module\_service\_account) | ./modules/service_account | n/a |
 | <a name="module_subnetwork_a"></a> [subnetwork\_a](#module\_subnetwork\_a) | ./modules/subnet | n/a |
@@ -57,4 +58,5 @@
 | <a name="output_external_ip_address_lemp_server"></a> [external\_ip\_address\_lemp\_server](#output\_external\_ip\_address\_lemp\_server) | n/a |
 | <a name="output_internal_ip_address_lamp_server"></a> [internal\_ip\_address\_lamp\_server](#output\_internal\_ip\_address\_lamp\_server) | n/a |
 | <a name="output_internal_ip_address_lemp_server"></a> [internal\_ip\_address\_lemp\_server](#output\_internal\_ip\_address\_lemp\_server) | n/a |
+| <a name="output_nlb_ip_load_balancer"></a> [nlb\_ip\_load\_balancer](#output\_nlb\_ip\_load\_balancer) | n/a |
 <!-- END_TF_DOCS -->

@@ -96,7 +96,35 @@ module "lamp_instance_preemptible" {
   ssh_key_path  = "~/.ssh/yandex_cloud_20250211.pub"
 }
 
+module "load_balancer" {
+  source = "./modules/load_balancer"
 
+  folder_id = var.folder_id
+  cloud_id  = var.cloud_id
+  token     = var.token
+
+  target_group_name = "nlb-target-group"
+  region_id         = "ru-central1"
+
+  targets = [
+    {
+      subnet_id = module.subnetwork_a.subnet_id
+      address   = module.lemp_instance_preemptible.internal_ip_address
+    },
+    {
+      subnet_id = module.subnetwork_b.subnet_id
+      address   = module.lamp_instance_preemptible.internal_ip_address
+    }
+  ]
+
+  nlb_name         = "network-load-balancer"
+  listener_name    = "http-listener"
+  listener_port    = 80
+  target_port      = 80
+  healthcheck_name = "http-healthcheck"
+  healthcheck_port = 80
+  healthcheck_path = "/"
+}
 
 
 
